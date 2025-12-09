@@ -1,28 +1,29 @@
-#include <cstdint>
+#pragma once
+#include <mutex>
+#include <condition_variable>
 #include <vector>
-#include <array>
-#include <stddef.h>
+#include <atomic>
 
 #include "telemetry.h"
 
 class TelemetryBuffer
 {
-  uint8_t producer;
-  uint8_t consumer;
-  const size_t size;
-  std::vector<TelemetryPacket> buffer;
+private:
+  std::vector<TelemetryPacket> buffer_;
+  size_t front, back;
+  std::mutex mtx_;
+  std::condition_variable cv_full_;
+  std::condition_variable cv_empty_;
+  const size_t capacity_;
+  std::atomic<bool> stop_ = false;
+
+  bool isEmpty() const;
+  bool isFull() const;
 
 public:
-  TelemetryBuffer(size_t sz) : size(sz), buffer(sz), producer(0), consumer(-1) {}
-  void push(TelemetryPacket packet)
-  {
-    buffer[producer] = packet;
-    if (consumer == -1)
-      consumer = 0;
-    producer = (producer + 1) % size;
-  }
-  void pop()
-  {
-    consumer = (consumer + 1) % size;
-  }
+  explicit TelemetryBuffer(size_t capacity = 100);
+  void push(const TelemetryPacket &pkt);
+  TelemetryPacket pop();
+  size_t size();
+  void shutdown();
 };

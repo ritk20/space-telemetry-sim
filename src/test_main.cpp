@@ -1,24 +1,23 @@
-#include <iostream>
-#include <iomanip>
 #include <thread>
 #include <chrono>
 
-#include "sensors.cpp"
+#include "../include/buffer.h"
+
+void sensor_thread(TelemetryBuffer &);
+void transmitter_thread(TelemetryBuffer &);
 
 int main()
 {
-  TelemetrySimulator sim;
-  for (int i = 0; i < 5; ++i)
-  {
-    TelemetryPacket p = sim.generate_packet(1.0);
-    std::cout << "tick=" << p.timestamp
-              << " temp=" << std::fixed << std::setprecision(2) << p.temperature
-              << " rad=" << p.radiation
-              << " batt=" << p.battery_voltage
-              << " pos=(" << p.position[0] << "," << p.position[1] << "," << p.position[2] << ")"
-              << " orient=(" << p.orientation[0] << "," << p.orientation[1] << "," << p.orientation[2] << ")"
-              << "\n";
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-  }
+  TelemetryBuffer buffer(100);
+
+  std::thread sensor(sensor_thread, std::ref(buffer));
+  std::thread transmitter(transmitter_thread, std::ref(buffer));
+
+  // run for 5 seconds then shut down
+  std::this_thread::sleep_for(std::chrono::seconds(5));
+  buffer.shutdown();
+
+  sensor.join();
+  transmitter.join();
   return 0;
 }
