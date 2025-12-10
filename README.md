@@ -16,7 +16,7 @@ The project (hopefully) demonstrates multithreading, data serialization, socket 
 - Multi-threaded producer–consumer design
 - Data compression using `zlib`
 - Binary serialization for efficient transmission
-- C++ BSD Socket for TCP protocol
+- C++ BSD Socket implementation of TCP protocol
 
 ## Folder Structure
 
@@ -48,24 +48,24 @@ timestamp,temperature,radiation,pos_x,pos_y,pos_z,pitch,roll,yaw,battery
 1733400001,28.5,0.12,7000,1200,340,-0.5,0.1,1.2,11.8
 1733400002,28.6,0.11,7000,1200,341,-0.5,0.1,1.3,11.8
 ```
-## Testing
+## Build
 
-For now, a simple `test_main.cpp` is implemented which can be run using:
 ```
-g++ -std=c++17 src/*.cpp -Iinclude -pthread -lz -O2 -o bin/test_sim
-./bin/test_sim
-```
-This will simulate the simulation for 10 seconds now
+mkdir build
+cd build
+cmake ..
+make
 
-## Sample Output
-TBA
+# Now you can run either:
+./sim        # The main simulation
+./test_sim   # The test suite
+```
 
 ## Issues
 1. cout can be out-of-order due to both transmitter and ground_station threads calling std::cout simultaneously. Need to be fixed by global mutex
 
 ## Future Scope
 
-- Proper Tests
 - Configurable parameters via CLI (interval, compression, ports) (To be added very soon)
 - System Metrics
 - Adding encryption

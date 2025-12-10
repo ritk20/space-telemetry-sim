@@ -65,7 +65,7 @@ void ground_station_thread()
       received += chunk;
     }
 
-    buffer = decompress(buffer, sizeof(TelemetryPacket));
+    buffer = decompress_data(buffer, sizeof(TelemetryPacket));
     TelemetryPacket pkt = deserialise(buffer);
 
     std::cout << "[Ground Station] Packet received:"

@@ -35,7 +35,7 @@ void transmitter_thread(TelemetryBuffer &buffer)
       break;
 
     std::vector<uint8_t> bytes = serialise(pkt);
-    bytes = compress(bytes);
+    bytes = compress_data(bytes);
 
     uint32_t len = htonl(bytes.size());
     send(sock, &len, sizeof(len), 0);

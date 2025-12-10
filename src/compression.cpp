@@ -13,14 +13,14 @@ std::vector<uint8_t> serialise(const TelemetryPacket &pkt)
   return data;
 }
 
-TelemetryPacket deserialise(const std::vector<uint8_t> data)
+TelemetryPacket deserialise(const std::vector<uint8_t> &data)
 {
   TelemetryPacket pkt{};
   std::memcpy(&pkt, data.data(), sizeof(pkt));
   return pkt;
 }
 
-std::vector<uint8_t> compress(const std::vector<uint8_t> &input)
+std::vector<uint8_t> compress_data(const std::vector<uint8_t> &input)
 {
   uLongf out_size = compressBound(input.size());
   std::vector<uint8_t> output(out_size);
@@ -32,7 +32,7 @@ std::vector<uint8_t> compress(const std::vector<uint8_t> &input)
   return output;
 }
 
-std::vector<uint8_t> decompress(const std::vector<uint8_t> &input, size_t expected_size)
+std::vector<uint8_t> decompress_data(const std::vector<uint8_t> &input, size_t expected_size)
 {
   std::vector<uint8_t> output(expected_size);
 
