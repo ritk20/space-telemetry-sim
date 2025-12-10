@@ -160,7 +160,7 @@ void sensor_thread(TelemetryBuffer &buffer)
   TelemetrySimulator sim;
   auto last = std::chrono::steady_clock::now();
 
-  while (true)
+  while (!buffer.is_shutdown())
   {
     auto now = std::chrono::steady_clock::now();
     double dt = std::chrono::duration<double>(now - last).count();

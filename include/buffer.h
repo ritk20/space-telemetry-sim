@@ -26,4 +26,5 @@ public:
   TelemetryPacket pop();
   size_t size();
   void shutdown();
+  bool is_shutdown() const;
 };

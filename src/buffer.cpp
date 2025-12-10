@@ -70,3 +70,8 @@ size_t TelemetryBuffer::size()
     return back - front;
   return capacity_ - (front - back);
 }
+
+bool TelemetryBuffer::is_shutdown() const
+{
+  return stop_.load();
+}
